@@ -23,6 +23,8 @@ public class SJBootApplication {
 	public static void main(String[] args) {
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
 		WebServer webServer = serverFactory.getWebServer(new ServletContextInitializer() {
+			HelloController helloController = new HelloController();
+
 			@Override
 			public void onStartup(ServletContext servletContext) throws ServletException {
 				servletContext.addServlet("frontcontroller", new HttpServlet() {
@@ -31,9 +33,11 @@ public class SJBootApplication {
 						if(req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
 							String name = req.getParameter("name");
 
+							String ret = helloController.hello(name);
+
 							resp.setStatus(HttpStatus.OK.value());
 							resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-							resp.getWriter().println("Hello " + name);
+							resp.getWriter().println(ret);
 						}else if(req.getRequestURI().equals("/user")) {
 
 						}else {
