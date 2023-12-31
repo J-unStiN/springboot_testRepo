@@ -2,6 +2,7 @@ package com.example.demo;
 
 
 import org.apache.catalina.startup.Tomcat;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -29,26 +30,20 @@ import java.io.IOException;
 @Configuration
 @ComponentScan
 public class SJBootApplication {
+	@Bean
+	public ServletWebServerFactory serverFactory() {
+		return new TomcatServletWebServerFactory();
+	}
 
+	@Bean
+	public DispatcherServlet dispatcherServlet() {
+		return new DispatcherServlet();
+	}
 
 	public static void main(String[] args) {
-		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext() {
-			@Override
-			protected void onRefresh() {
-				super.onRefresh();
-				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-				WebServer webServer = serverFactory.getWebServer(servletContext -> {
-					servletContext.addServlet("dispatcherServlet",
-							new DispatcherServlet(this)
-					).addMapping("/*"); // 프론트컨트롤러 - /아래로 들어오는 모든 요청을 처리함
-				});
-				webServer.start();
-			}
-		};
-		applicationContext.register(SJBootApplication.class);
-		applicationContext.refresh();
-
-
+		SpringApplication.run(SJBootApplication.class, args);
 	}
+
+
 
 }
