@@ -24,18 +24,24 @@ import java.io.IOException;
 public class SJBootApplication {
 
 	public static void main(String[] args) {
-		GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
+		GenericWebApplicationContext applicationContext = new GenericWebApplicationContext() {
+			@Override
+			protected void onRefresh() {
+				super.onRefresh();
+				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+				WebServer webServer = serverFactory.getWebServer(servletContext -> {
+					servletContext.addServlet("dispatcherServlet",
+							new DispatcherServlet(this)
+					).addMapping("/*"); // 프론트컨트롤러 - /아래로 들어오는 모든 요청을 처리함
+				});
+				webServer.start();
+			}
+		};
 		applicationContext.registerBean(HelloController.class); // bin등록방법을 클래스 정보만 넘겨줌.
 		applicationContext.registerBean(SimpleHellowService.class); // 생성자를 호출할때 컨테이너의 등록, 해당 클래스를 찾아 생성자에 전달
 		applicationContext.refresh();
 
-		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-		WebServer webServer = serverFactory.getWebServer(servletContext -> {
-            servletContext.addServlet("dispatcherServlet",
-                        new DispatcherServlet(applicationContext)
-                    ).addMapping("/*"); // 프론트컨트롤러 - /아래로 들어오는 모든 요청을 처리함
-        });
-		webServer.start();
+
 	}
 
 }
