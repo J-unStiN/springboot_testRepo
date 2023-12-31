@@ -24,6 +24,7 @@ public class SJBootApplication {
 	public static void main(String[] args) {
 		GenericApplicationContext applicationContext = new GenericApplicationContext();
 		applicationContext.registerBean(HelloController.class); // bin등록방법을 클래스 정보만 넘겨줌.
+		applicationContext.registerBean(SimpleHellowService.class); // 생성자를 호출할때 컨테이너의 등록, 해당 클래스를 찾아 생성자에 전달
 		applicationContext.refresh();
 
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
