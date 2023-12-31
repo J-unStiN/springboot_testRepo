@@ -18,18 +18,18 @@ import java.util.Objects;
 public class HelloController {
 
     private final HellowService hellowService;
-    private final ApplicationContext applicationContext;
 
-    public HelloController(HellowService hellowService, ApplicationContext applicationContext) {
+    public HelloController(HellowService hellowService) {
         this.hellowService = hellowService;
-        this.applicationContext = applicationContext;
-
-        System.out.println(applicationContext);
     }
 
     @GetMapping("/hello")
     public String hello(String name) {
-        return hellowService.sayHello(Objects.requireNonNull(name));
+        if(name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException();
+        }
+
+        return hellowService.sayHello(name);
     }
 
 }
