@@ -27,19 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Configuration
-@ComponentScan
+@MySpringBootAnnotation
 public class SJBootApplication {
-	@Bean
-	public ServletWebServerFactory serverFactory() {
-		return new TomcatServletWebServerFactory();
-	}
-
-	@Bean
-	public DispatcherServlet dispatcherServlet() {
-		return new DispatcherServlet();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(SJBootApplication.class, args);
 	}
