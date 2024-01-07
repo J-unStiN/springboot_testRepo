@@ -32,4 +32,10 @@ public class HelloController {
         return hellowService.sayHello(name);
     }
 
+    @GetMapping("/count")
+    public String count(String name) {
+        return name + ": " + hellowService.countOf(name);
+    }
+
+
 }
